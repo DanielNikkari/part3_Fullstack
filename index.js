@@ -1,5 +1,9 @@
 const express = require("express")
+const bodyParser = require('body-parser')
+
 const app = express()
+
+const jsonParser = bodyParser.json()
 
 let phonebook = [
   { 
@@ -44,6 +48,21 @@ app.get("/api/persons/:id", (request, response) => {
   } else {
     response.status(404).end()
   }
+})
+
+app.post("/api/persons", jsonParser, (request, response) => {
+  const new_id = Math.floor((Math.random() * 1000000) + 1)
+  const person = request.body
+  person.id = new_id
+  phonebook = phonebook.concat(person)
+  response.json(person)
+})
+
+app.delete("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id)
+  phonebook = phonebook.filter(person => person.id !== id)
+  console.log(phonebook)
+  response.status(204).end()
 })
 
 const PORT = 3001
