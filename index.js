@@ -51,6 +51,18 @@ app.get("/api/persons/:id", (request, response) => {
 })
 
 app.post("/api/persons", jsonParser, (request, response) => {
+  if (!request.body.name) {
+    return response.status(400).json({
+      error: "name missing"
+    })
+  } else if (!request.body.number) {
+    return response.status(400).json({
+      error: "number missing"
+    })
+  }
+  if ((phonebook.filter(person => person.name === request.body.name)).length > 0) {
+    return response.status(400).json({ error: 'name must be unique' })
+  }
   const new_id = Math.floor((Math.random() * 1000000) + 1)
   const person = request.body
   person.id = new_id
