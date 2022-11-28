@@ -1,12 +1,21 @@
 const express = require("express")
-const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 const app = express()
 
-app.use(morgan('tiny'))
+app.use(express.json())
 
-const jsonParser = bodyParser.json()
+morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
+morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens['response-time'](req, res), 'ms',
+    tokens.data(req, res)
+  ].join(' ')
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 let phonebook = [
   { 
@@ -53,7 +62,7 @@ app.get("/api/persons/:id", (request, response) => {
   }
 })
 
-app.post("/api/persons", jsonParser, (request, response) => {
+app.post("/api/persons", (request, response) => {
   if (!request.body.name) {
     return response.status(400).json({
       error: "name missing"
