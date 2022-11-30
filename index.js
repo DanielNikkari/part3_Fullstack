@@ -53,10 +53,13 @@ app.get("/api/persons", (request, response) => {
 })
 
 app.get("/info", (request, response) => {
-  const phonebookSize = phonebook.length
-  response.end(
-    `Phonebook has info for ${phonebookSize} people\n${Date()}`
-  )
+  // const phonebookSize = phonebook.length
+  Person.find({}).then(persons => {
+    const phonebookSize = persons.length
+    response.end(
+      `Phonebook has info for ${phonebookSize} people\n${Date()}`
+    )
+  })
 })
 
 app.get("/api/persons/:id", (request, response) => {
@@ -83,11 +86,19 @@ app.post("/api/persons", (request, response) => {
   if ((phonebook.filter(person => person.name === request.body.name)).length > 0) {
     return response.status(400).json({ error: 'name must be unique' })
   }
-  const new_id = Math.floor((Math.random() * 1000000) + 1)
-  const person = request.body
-  person.id = new_id
-  phonebook = phonebook.concat(person)
-  response.json(person)
+  // const new_id = Math.floor((Math.random() * 1000000) + 1)
+  const personToAdd = request.body
+  // person.id = new_id
+
+  const person = new Person({
+    name: personToAdd.name,
+    number: personToAdd.number,
+  })
+  // phonebook = phonebook.concat(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+  
 })
 
 app.delete("/api/persons/:id", (request, response) => {
