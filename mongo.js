@@ -32,7 +32,7 @@ if (process.argv.length > 3) {
   mongoose.connect(url).then((result) => {
     Person.find({}).then((persons) => {
       console.log("phonebook:")
-      persons.forEach(person => {
+      result.forEach(person => {
         console.log(`${person.name} ${person.number}`)
       })
       mongoose.connection.close()

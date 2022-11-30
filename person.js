@@ -17,7 +17,28 @@ const personSchema = new mongoose.Schema({
     type: String,
     minLength: 3,
   },
-  number: String
+  number: {
+    type: String,
+    minLength: 8,
+    validate: {
+      validator: (v) => {
+        if (!v.includes('-')) {
+          return false
+        }
+        const parts = v.split('-')
+        if (!Number.isInteger(parseInt(parts[0])) || parts[0].length > 3 || parts[0].length < 2) {
+          return false
+        }
+        if (!Number.isInteger(parseInt(parts[1]))) {
+          return false
+        }
+        return true
+      },
+      message: (props) => {
+        return "The number has to be numbers in form XX-XXXXXX or XXX-XXXXXX";
+      }
+    }
+  }
 })
 
 personSchema.set('toJSON', {
