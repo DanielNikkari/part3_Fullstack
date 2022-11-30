@@ -73,7 +73,7 @@ app.get("/api/persons/:id", (request, response) => {
   }
 })
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   if (!request.body.name) {
     return response.status(400).json({
       error: "name missing"
@@ -98,15 +98,46 @@ app.post("/api/persons", (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => {
+    next(error)
+  })
   
 })
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  phonebook = phonebook.filter(person => person.id !== id)
-  console.log(phonebook)
-  response.status(204).end()
+app.delete("/api/persons/:id", (request, response, next) => {
+
+  Person.findByIdAndRemove(request.params.id).then(result => {
+    response.status(204).end()
+  })
+  .catch(error => {
+    next(error)
+  })
+
+  // const id = Number(request.params.id)
+  // phonebook = phonebook.filter(person => person.id !== id)
+  // console.log(phonebook)
+  // response.status(204).end()
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else {
+    response.status(500).send({ error: `Something went wrong: ${error}}` })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 8080
 
