@@ -83,9 +83,13 @@ app.post("/api/persons", (request, response, next) => {
       error: "number missing"
     })
   }
-  if ((phonebook.filter(person => person.name === request.body.name)).length > 0) {
-    return response.status(400).json({ error: 'name must be unique' })
-  }
+  // const checkDuplicate = phonebook.filter(person => person.name === request.body.name)
+  // if (checkDuplicate.length > 0) {
+  //   console.log("checkDuplicate:", checkDuplicate)
+  //   const id = checkDuplicate.id
+  //   axios.put(`api/persons/${id}`, request.body)
+  //   // return response.status(400).json({ error: 'name must be unique' })
+  // }
   // const new_id = Math.floor((Math.random() * 1000000) + 1)
   const personToAdd = request.body
   // person.id = new_id
@@ -117,6 +121,21 @@ app.delete("/api/persons/:id", (request, response, next) => {
   // phonebook = phonebook.filter(person => person.id !== id)
   // console.log(phonebook)
   // response.status(204).end()
+})
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatePerson => {
+      response.json(updatePerson)
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
