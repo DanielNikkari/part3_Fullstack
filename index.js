@@ -1,5 +1,8 @@
+require('dotenv').config()
+console.log(process.env.MONGODB_URI)
 const express = require("express")
 const morgan = require('morgan')
+const Person = require('./person')
 
 const app = express()
 
@@ -43,7 +46,10 @@ let phonebook = [
 ]
 
 app.get("/api/persons", (request, response) => {
-  response.json(phonebook)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
+  // response.json(phonebook)
 })
 
 app.get("/info", (request, response) => {
