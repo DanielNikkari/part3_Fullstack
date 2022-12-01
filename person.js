@@ -1,15 +1,15 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const url = process.env.MONGODB_URI
 
 console.log(`Connecting to ${url}`)
 
 mongoose.connect(url)
-  .then(result => {
-    console.log("Connected to MongoDB")
+  .then(result => { // eslint-disable-line no-unused-vars
+    console.log('Connected to MongoDB')
   })
   .catch(err => {
-    console.log("Error connecting to MongoDB: ", err)
+    console.log('Error connecting to MongoDB: ', err)
   })
 
 const personSchema = new mongoose.Schema({
@@ -34,8 +34,8 @@ const personSchema = new mongoose.Schema({
         }
         return true
       },
-      message: (props) => {
-        return "The number has to be numbers in form XX-XXXXXX or XXX-XXXXXX";
+      message: (props) => { // eslint-disable-line no-unused-vars
+        return 'The number has to be numbers in form XX-XXXXXX or XXX-XXXXXX'
       }
     }
   }

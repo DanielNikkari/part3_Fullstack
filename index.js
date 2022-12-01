@@ -1,6 +1,6 @@
 require('dotenv').config()
 console.log(process.env.MONGODB_URI)
-const express = require("express")
+const express = require('express')
 const morgan = require('morgan')
 const Person = require('./person')
 
@@ -8,7 +8,7 @@ const app = express()
 
 app.use(express.json())
 
-morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('data', function (req, res) { return JSON.stringify(req.body) }) // eslint-disable-line no-unused-vars
 morgan(function (tokens, req, res) {
   return [
     tokens.method(req, res),
@@ -22,37 +22,37 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :d
 
 app.use(express.static('build'))
 
-let phonebook = [
+let phonebook = [ // eslint-disable-line no-unused-vars
   { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
+    'id': 1,
+    'name': 'Arto Hellas', 
+    'number': '040-123456'
   },
   { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
+    'id': 2,
+    'name': 'Ada Lovelace', 
+    'number': '39-44-5323523'
   },
   { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
+    'id': 3,
+    'name': 'Dan Abramov', 
+    'number': '12-43-234345'
   },
   { 
-    "id": 4,
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
+    'id': 4,
+    'name': 'Mary Poppendieck', 
+    'number': '39-23-6423122'
   }
 ]
 
-app.get("/api/persons", (request, response) => {
+app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
   // response.json(phonebook)
 })
 
-app.get("/info", (request, response) => {
+app.get('/info', (request, response) => {
   // const phonebookSize = phonebook.length
   Person.find({}).then(persons => {
     const phonebookSize = persons.length
@@ -62,12 +62,12 @@ app.get("/info", (request, response) => {
   })
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
 
   Person.findById(request.params.id).then(persons => {
     response.json(persons)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 
   // const id = Number(request.params.id)
   // const person = phonebook.find(person => person.id === id)
@@ -79,14 +79,14 @@ app.get("/api/persons/:id", (request, response) => {
   // }
 })
 
-app.post("/api/persons", (request, response, next) => {
+app.post('/api/persons', (request, response, next) => {
   if (!request.body.name) {
     return response.status(400).json({
-      error: "name missing"
+      error: 'name missing'
     })
   } else if (!request.body.number) {
     return response.status(400).json({
-      error: "number missing"
+      error: 'number missing'
     })
   }
   // const checkDuplicate = phonebook.filter(person => person.name === request.body.name)
@@ -108,20 +108,20 @@ app.post("/api/persons", (request, response, next) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => {
-    next(error)
-  })
+    .catch(error => {
+      next(error)
+    })
   
 })
 
-app.delete("/api/persons/:id", (request, response, next) => {
+app.delete('/api/persons/:id', (request, response, next) => {
 
-  Person.findByIdAndRemove(request.params.id).then(result => {
+  Person.findByIdAndRemove(request.params.id).then(result => { // eslint-disable-line no-unused-vars
     response.status(204).end()
   })
-  .catch(error => {
-    next(error)
-  })
+    .catch(error => {
+      next(error)
+    })
 
   // const id = Number(request.params.id)
   // phonebook = phonebook.filter(person => person.id !== id)
@@ -129,7 +129,7 @@ app.delete("/api/persons/:id", (request, response, next) => {
   // response.status(204).end()
 })
 
-app.put("/api/persons/:id", (request, response, next) => {
+app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
   const person = {

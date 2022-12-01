@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
   console.log('Please provide the password as an argument: node mongo.js <password>')
@@ -17,7 +17,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length > 3) {
-  mongoose.connect(url).then((result) => {
+  mongoose.connect(url).then((result) => { // eslint-disable-line no-unused-vars
     const person = new Person({
       name: process.argv[3],
       number: process.argv[4]
@@ -27,11 +27,11 @@ if (process.argv.length > 3) {
     console.log(`added ${process.argv[3]} number ${process.argv[4]} to phonebook`)
     return mongoose.connection.close()
   })
-  .catch((err) => {console.log(err)})
+    .catch((err) => {console.log(err)})
 } else {
   mongoose.connect(url).then((result) => {
-    Person.find({}).then((persons) => {
-      console.log("phonebook:")
+    Person.find({}).then((persons) => { // eslint-disable-line no-unused-vars
+      console.log('phonebook:')
       result.forEach(person => {
         console.log(`${person.name} ${person.number}`)
       })
